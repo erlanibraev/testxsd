@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<xs:schema targetNamespace="http://www.factor.kz/resources/TOFISchema" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:md="http://www.factor.kz/resources/TOFISchema/metadata"
+           xmlns:data="http://www.factor.kz/resources/TOFISchema/data"
+           xmlns="http://www.factor.kz/resources/TOFISchema">
+
+    <xs:import namespace="http://www.factor.kz/resources/TOFISchema/data" schemaLocation="data.xsd"/>
+    <xs:import namespace="http://www.factor.kz/resources/TOFISchema/metadata" schemaLocation="metadata.xsd"/>
+
+    <xs:element name="getMessageRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Request" type="RequestType" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="getMessageResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="body" type="BodyType" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="BodyType">
+        <xs:sequence>
+            <xs:element name="metadata" type="md:MetaDataType" maxOccurs="1"/>
+            <xs:element name="data" type="data:DataType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RequestType">
+    </xs:complexType>
+</xs:schema>

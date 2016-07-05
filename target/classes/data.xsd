@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<xs:schema targetNamespace="http://www.factor.kz/resources/TOFISchema/data" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tst="http://www.factor.kz/resources/TOFISchema/simpletype"
+           xmlns:tct="http://www.factor.kz/resources/TOFISchema/complextype"
+           xmlns="http://www.factor.kz/resources/TOFISchema/data">
+
+    <xs:import namespace="http://www.factor.kz/resources/TOFISchema/simpletype" schemaLocation="simpletype.xsd"/>
+    <xs:import namespace="http://www.factor.kz/resources/TOFISchema/complextype" schemaLocation="complextype.xsd"/>
+
+    <xs:complexType name="EntityRef">
+        <xs:annotation>
+            <xs:documentation>Тип для описания ссылки на экземпляр любой сущности.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="tst:CodeType">
+                <xs:attribute name="csCode" type="tst:CodeType" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Ссылка на код системы кодирования.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="Code" type="tst:CodeType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>Ссылка на код экземпляра сущности.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="DataType">
+        <xs:sequence>
+            <xs:element name="CodeOwner" type="EntityRef"/>
+            <xs:element name="CodeProperty" type="EntityRef"/>
+            <xs:element name="CodeStatus" type="EntityRef" minOccurs="0"/>
+            <xs:element name="CodeProvider" type="EntityRef" minOccurs="0"/>
+            <xs:element name="PeriodType" type="tst:PeriodTypeType" minOccurs="0"/>
+            <xs:element name="DateBegin" type="tst:ValidateDate" minOccurs="0"/>
+            <xs:element name="CodeMeasure" type="EntityRef" minOccurs="0"/>
+            <xs:choice>
+                <xs:element name="ValueId" type="EntityRef" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="ValueNum" type="xs:double" minOccurs="0"/>
+                <xs:element name="ValueDate" type="tst:ValidateDate" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="ValueDateTime" type="xs:dateTime" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="ValueFile" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="ValueString" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="ValueBoolean" type="xs:boolean" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="ValueURI" type="xs:anyURI" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

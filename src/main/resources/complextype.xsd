@@ -1,0 +1,710 @@
+<?xml version="1.0"?>
+<xs:schema targetNamespace="http://www.factor.kz/resources/TOFISchema/complextype" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tst="http://www.factor.kz/resources/TOFISchema/simpletype"
+           xmlns="http://www.factor.kz/resources/TOFISchema/complextype">
+
+    <xs:import namespace="http://www.factor.kz/resources/TOFISchema/simpletype" schemaLocation="simpletype.xsd"/>
+
+    <xs:complexType name="NameableType" abstract="true">
+        <xs:annotation>
+            <xs:documentation>NameableType есть абстрактный тип для производства именованных неверсионных типов
+                сущностей.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="IdentifiableType">
+                <xs:sequence>
+                    <xs:element name="Name" type="tst:TextType" maxOccurs="unbounded"/>
+                    <xs:element name="FullName" type="tst:TextType" maxOccurs="unbounded"/>
+                </xs:sequence>
+                <xs:attribute name="DateBegin" type="tst:ValidateDate" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Начало интервала жизни экземпляра сущности синхронизатора.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="DateEnd" type="tst:ValidateDate" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Конец интервала жизни экземпляра сущности синхронизатора.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="IdentifiableType" abstract="true">
+        <xs:annotation>
+            <xs:documentation>IdentifiableType есть абстрактный тип, который является родителем всех кодированных типов.
+                Идентификатором является не id, а code.
+                Код (code) внутренней системы кодирования является уникальным для всех экземпляров сущностей
+                синхронизатора ТОФИ.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="AnnotableType">
+                <xs:attribute name="code" type="tst:CodeType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>Код экземпляра сущности синхронизатора.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="url" type="xs:anyURI" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>URL экземпляра сущности синхронизатора.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="AnnotableType" abstract="true">
+        <xs:annotation>
+            <xs:documentation>AnnotableType абстрактный тип, используемый для всех аннотируемых артефактов. Любой
+                аннотируемый тип наследуется от AnnotableType.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Annotations" type="AnnotationsType" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:positiveInteger" use="required">
+            <xs:annotation>
+                <xs:documentation>id экземпляра аннотируемой сущности.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="AnnotationsType">
+        <xs:annotation>
+            <xs:documentation>Список аннотаций.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Annotation" type="AnnotationType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AnnotationType">
+        <xs:annotation>
+            <xs:documentation>AnnotationType обеспечивает включение в содержание и структуру сообщений
+                недокументированных справок и аннотаций.
+                Это обеспечивает необязательные поля для представления заголовка, типа описания, URI, текста аннотации.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="AnnotationTitle" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Заголовок аннотации.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="AnnotationType" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>AnnotationType предусмотрено для различных вариантов применений аннотаций.
+                        Возможные варианты применения определяются пользователем.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="AnnotationText" type="tst:TextType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Текст аннотации.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FactorType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий конкретного фактора</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="NameableType">
+                <xs:sequence>
+                    <xs:element name="FactorVal" type="FactorValType" minOccurs="1" maxOccurs="unbounded"/>
+                </xs:sequence>
+                <xs:attribute name="Update" type="tst:UpdateType" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="FactorValType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий значения факторов</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="NameableType">
+                <xs:attribute name="DateBegin" type="tst:ValidateDate" use="prohibited"/>
+                <xs:attribute name="DateEnd" type="tst:ValidateDate" use="prohibited"/>
+                <xs:attribute name="Order" type="xs:positiveInteger" use="required">
+                    <xs:annotation>
+                        <xs:documentation>Порядковый номер значения фактора</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="Update" type="tst:UpdateType" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="VersionType" abstract="true">
+        <xs:annotation>
+            <xs:documentation>VersionType есть абстрактный тип для моделирования версии версионных сущностей.
+                VersionType наследуется от AnnotableType, так как версия не имеет уникального кода.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="AnnotableType">
+                <xs:sequence>
+                    <xs:element name="Name" type="tst:TextType" maxOccurs="1"></xs:element>
+                    <xs:element name="FullName" type="tst:TextType" maxOccurs="1"></xs:element>
+                </xs:sequence>
+                <xs:attribute name="VersionNumber" type="tst:VersionNumberType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>Номер версии экземпляра сущности синхронизатора. Для ТОФИ-модели id версии.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="DateBegin" type="tst:ValidateDate" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Начало интервала жизни экземпляра сущности синхронизатора.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="DateEnd" type="tst:ValidateDate" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Конец интервала жизни экземпляра сущности синхронизатора.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="LatestVersion" type="tst:LatestVersionType" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="CodingSystemType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий системы кодирования.</xs:documentation>
+            <xs:documentation>Надо доработать! Указать разделители для иерархических и фасетных систем кодирования
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="NameableType">
+                <xs:sequence>
+                    <xs:element name="Sender" type="AgencyType"/>
+                </xs:sequence>
+                <xs:attribute name="csType" type="tst:CodingSystemTypeType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>Тип системы кодирования.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="MeterType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий измеритель.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="NameableType">
+                <xs:sequence>
+                    <xs:element name="Factor" type="FactorType" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Дочерние показатель измерителя первого уровня. Остальные дети есть дети
+                                показателей первого уровня и т.д.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="MeterRate" type="MeterRateType" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Дочерние показатель измерителя первого уровня. Остальные дети есть дети
+                                показателей первого уровня и т.д.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="MeasureBase" type="MeasureBaseType" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Дочерние показатель измерителя первого уровня. Остальные дети есть дети
+                                показателей первого уровня и т.д.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="DateBegin" type="tst:ValidateDate" use="prohibited"/>
+                <xs:attribute name="DateEnd" type="tst:ValidateDate" use="prohibited"/>
+                <xs:attribute name="MeterStructure" type="tst:PropertyStructureType"/>
+                <xs:attribute name="Update" type="tst:UpdateType" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="MeterRateType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий показатель, дочерние элементы измерителя.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="NameableType">
+                <xs:sequence minOccurs="0">
+                    <xs:element name="FactorVal" type="FactorValType" maxOccurs="unbounded"/>
+                    <xs:element name="MeterRate" type="MeterRateType" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Дочерние показатели показателя измерителя следующего уровня (прямые дети).
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="Update" type="tst:UpdateType" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="MeasureBaseType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий конкретную базовую единицу измерения.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="NameableType">
+                <xs:attribute name="DateBegin" type="tst:ValidateDate" use="prohibited"/>
+                <xs:attribute name="DateEnd" type="tst:ValidateDate" use="prohibited"/>
+                <xs:attribute name="KFromBase" type="tst:KFromBaseType" default="1">
+                    <xs:annotation>
+                        <xs:documentation>Коэффициент перевода в производную единицу измерения.Для базовой единицы
+                            измерения всегда равен 1.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="Update" type="tst:UpdateType" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="AgencyType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий Агентство.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="IdentifiableType">
+                <xs:sequence>
+                    <xs:element name="Version" type="AgencyVersionType" maxOccurs="unbounded"></xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="AgencyVersionType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий версию Агентства.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="VersionType">
+                <xs:sequence>
+                    <xs:element name="AgencyUnit" type="tst:TextType">
+                        <xs:annotation>
+                            <xs:documentation>Наименование подразделения организации отправителя/получателя метаданных и
+                                данных.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ContactName" type="tst:TextType">
+                        <xs:annotation>
+                            <xs:documentation>Наименование ответственного лица со стороны отправителя/получателя
+                                метаданных и данных.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ContactEmail" type="tst:ValidateEmail">
+                        <xs:annotation>
+                            <xs:documentation>Адрес электронной почты ответственного лица со стороны
+                                отправителя/получателя метаданных и данных.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ContactPhone" type="tst:ValidatePhone">
+                        <xs:annotation>
+                            <xs:documentation>Телефонный номер ответственного лица со стороны отправителя/получателя
+                                метаданных и данных.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ContactFax" type="tst:ValidatePhone">
+                        <xs:annotation>
+                            <xs:documentation>Номер факса ответственного лица со стороны отправителя/получателя
+                                метаданных и данных.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="OwnerContainerType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий контейнер владельцев данных.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="OwnerBaseType">
+                <xs:sequence>
+                    <xs:element name="Parent" type="OwnerContainerType">
+                        <xs:annotation>
+                            <xs:documentation>Ссылка на родительский контейнер владельцев данных.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="OwnerBaseType">
+        <xs:complexContent>
+            <xs:extension base="VersionableType">
+                <xs:sequence>
+                    <xs:element name="Annotations" type="AnnotationsType" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="VersionableType" abstract="true">
+        <xs:annotation>
+            <xs:documentation>VersionableType есть абстрактный тип для моделирования версионных сущностей.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="IdentifiableType">
+                <xs:sequence>
+                    <xs:element name="Version" type="VersionType" maxOccurs="unbounded"></xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="OwnerType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий владельца данных типов объектов.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="OwnerBaseType">
+                <xs:sequence>
+                    <xs:choice>
+                        <xs:element name="OwnerContainer" type="OwnerContainerType"/>
+                        <xs:element name="OwnerContainerFactor" type="OwnerContainerType"/>
+                    </xs:choice>
+                    <xs:element name="Parent" type="OwnerType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="PropertyContainerType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий контейнер свойств.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="PropertyBaseType">
+                <xs:sequence>
+                    <xs:element name="Parent" type="PropertyContainerType">
+                        <xs:annotation>
+                            <xs:documentation>Ссылка на родительский контейнер свойств.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="PropertyBaseType">
+        <xs:complexContent>
+            <xs:extension base="VersionableType">
+                <xs:sequence>
+                    <xs:element name="Annotations" type="AnnotationsType" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="PropertyType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий атрибутивные свойства.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="PropertyBaseType">
+                <xs:annotation>
+                    <xs:documentation>Список типов периодов от которых зависит значение свойства.</xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element name="DataStatus" type="DataStatusType" minOccurs="0"/>
+                    <xs:element name="DataProvider" type="DataProviderType" minOccurs="0"/>
+                    <xs:element name="DataStatusDefault" type="FactorValType" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Значение статуса данных по умолчанию. Для ТОФИ-модели указывается последнее
+                                значение
+                                фактора.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="DataProviderDefault" type="OwnerType" minOccurs="0"/>
+                    <xs:element name="PropertyContainer" type="PropertyContainerType"/>
+                    <xs:element name="PeriodType" type="tst:PeriodTypeType" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+                <xs:attribute name="PropertyValueType" type="tst:PropertyValueTypeType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>Тип значения свойства.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="PropertyValDependPeriod" type="tst:PropertyValDependPeriodType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>Зависимость значения свойства от периода.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="isUnique" type="tst:isUniqueType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>Однозначность значения свойства.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="Mask" type="xs:string" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Регулярное выражение для атрибутивного свойства с маской.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="DataStatusType">
+        <xs:complexContent>
+            <xs:extension base="NameableType">
+                <xs:sequence>
+                    <xs:element name="Factor" type="FactorType"/>
+                </xs:sequence>
+                <xs:attribute name="DateBegin" type="tst:ValidateDate" use="prohibited"/>
+                <xs:attribute name="DateEnd" type="tst:ValidateDate" use="prohibited"/>
+                <xs:attribute name="Update" type="tst:UpdateType" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="DataProviderType">
+        <xs:complexContent>
+            <xs:extension base="OwnerBaseType">
+                <xs:choice>
+                    <xs:element name="OwnerContainer" type="OwnerContainerType"/>
+                    <xs:element name="OwnerContainerFactor" type="OwnerContainerFactorType"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="OwnerContainerFactorType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий контейнер владельцев данных, образованных от значений факторов.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="OwnerBaseType">
+                <xs:choice>
+                    <xs:sequence maxOccurs="unbounded">
+                        <xs:element name="Factor" type="FactorType"/>
+                    </xs:sequence>
+                    <xs:sequence maxOccurs="unbounded">
+                        <xs:element name="FactorVal" type="FactorValType"/>
+                    </xs:sequence>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="OwnerContainerPropertyType">
+        <xs:annotation>
+            <xs:documentation>Характеристические свойства владельцев данных (типа объектов).</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:sequence>
+                <xs:element name="OwnerContainer" type="OwnerContainerType"/>
+                <xs:element name="Property"  type="PropertyType"/>
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element name="OwnerContainer" type="OwnerContainerType"/>
+                <xs:element name="PropertyRef" type="PropertyRefType"/>
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element name="OwnerContainer" type="OwnerContainerType"/>
+                <xs:element name="PropertyMeter" type="PropertyMeterType"/>
+            </xs:sequence>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PropertyMeterType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий числовые свойства.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="PropertyBaseType">
+                <xs:annotation>
+                    <xs:documentation>Список типов периодов от которых зависит значение свойства.</xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element name="DataStatus" type="DataStatusType" minOccurs="0"/>
+                    <xs:element name="DataProvider" type="DataProviderType" minOccurs="0"/>
+                    <xs:element name="DataStatusDefault" type="FactorValType" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Значение статуса данных по умолчанию. Для ТОФИ-модели указывается последнее
+                                значение
+                                фактора.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="DataProviderDefault" type="OwnerType" minOccurs="0"/>
+                    <xs:element name="MinValue" type="xs:double"/>
+                    <xs:element name="MaxValue" type="xs:double"/>
+                    <xs:element name="Digit" type="xs:positiveInteger"/>
+                    <xs:element name="PropertyContainer" type="PropertyContainerType"/>
+                    <xs:element name="Meter" type="MeterType" minOccurs="0"/>
+                    <xs:element name="MeterRate" type="MeterRateType" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="PeriodType" type="tst:PeriodTypeType" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:choice>
+                        <xs:element name="MeasureBase"  type="MeasureBaseType" minOccurs="0"/>
+                        <xs:element name="MeasureDerivative"  type="MeasureDerivativeType" minOccurs="0"/>
+                    </xs:choice>
+                </xs:sequence>
+                <xs:attribute name="PropertyValueMeterType" type="tst:PropertyRefValueTypeType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>Тип значения свойства.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="PropertyValDependPeriod" type="tst:PropertyValDependPeriodType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>Зависимость значения свойства от периода.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="PropertyStructure" type="tst:PropertyStructureType" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="PropertyRefType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий ссылочные свойства.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="PropertyBaseType">
+                <xs:sequence>
+                    <xs:element name="DataStatus" type="DataStatusType" minOccurs="0"/>
+                    <xs:element name="DataProvider" type="DataProviderType" minOccurs="0"/>
+                    <xs:element name="DataStatusDefault" type="FactorValType" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Значение статуса данных по умолчанию. Для ТОФИ-модели указывается последнее
+                                значение
+                                фактора.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="DataProviderDefault" type="OwnerType" minOccurs="0"/>
+                    <xs:element name="PropertyContainer" type="PropertyContainerType"/>
+                    <xs:sequence>
+                        <xs:annotation>
+                            <xs:documentation>Список типов периодов от которых зависит значение свойства.</xs:documentation>
+                        </xs:annotation>
+                        <xs:element name="PeriodType" type="tst:PeriodTypeType" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                    <xs:choice>
+                        <xs:sequence>
+                            <xs:element name="MeasureBase"  type="MeasureBaseType" minOccurs="0"/>
+                            <xs:element name="MeasureDerivative"  type="MeasureDerivativeType" minOccurs="0"/>
+                        </xs:sequence>
+                        <xs:element name="Factor"  type="FactorType" minOccurs="0"/>
+                        <xs:element name="OwnerContainer" type="OwnerContainerType" minOccurs="0"/>
+                        <xs:element name="OwnerContainerFactor" type="OwnerContainerFactorType" minOccurs="0"/>
+                        <xs:element name="OwnerContainerRel" type="OwnerContainerRelType" minOccurs="0"/>
+                    </xs:choice>
+                </xs:sequence>
+                <xs:attribute name="PropertyValueRefType" type="tst:PropertyRefValueTypeType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>Тип значения свойства.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="PropertyValDependPeriod" type="tst:PropertyValDependPeriodType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>Зависимость значения свойства от периода.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="isUnique" type="tst:isUniqueType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>Однозначность значения свойства.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="MeasureDerivativeType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий конкретную производную единицу измерения.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="MeasureBaseType">
+                <xs:sequence>
+                    <xs:element name="MeasureBase"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="OwnerContainerRelType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий контейнер владельцев данных, имеющий многомерную структуру.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="OwnerBaseType">
+                <xs:sequence>
+                    <xs:element name="OwnerContainerMember" type="OwnerContainerMemberType" minOccurs="2" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="OwnerContainerMemberType">
+        <xs:choice>
+            <xs:element name="OwnerContainer" type="OwnerContainerType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="OwnerContainerFactor" type="OwnerContainerFactorType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="OwnerContainerRel" type="OwnerContainerRelType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+        <xs:attribute name="Order" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="OwnerContainerFactorPropertyType">
+        <xs:annotation>
+            <xs:documentation>Характеристические свойства владельцев данных (типа объектов ТОФИ).</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:sequence>
+                <xs:element name="OwnerContainerFactor" type="OwnerContainerFactorType"/>
+                <xs:element name="Property" type="PropertyType"/>
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element name="OwnerContainerFactor" type="OwnerContainerFactorType"/>
+                <xs:element name="PropertyRef" type="PropertyRefType"/>
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element name="OwnerContainerFactor" type="OwnerContainerFactorType"/>
+                <xs:element name="PropertyMeter" type="PropertyMeterType"/>
+            </xs:sequence>
+        </xs:sequence>
+
+    </xs:complexType>
+
+    <xs:complexType name="OwnerContainerRelPropertyType">
+        <xs:annotation>
+            <xs:documentation>Характеристические свойства владельцев данных (отношений между типами объектов).
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:sequence>
+                <xs:element name="OwnerContainerRel" type="OwnerContainerRelType"/>
+                <xs:element name="Property" type="PropertyType"/>
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element name="OwnerContainerRel" type="OwnerContainerRelType"/>
+                <xs:element name="PropertyRef" type="PropertyRefType"/>
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element name="OwnerContainerRel" type="OwnerContainerRelType"/>
+                <xs:element name="PropertyMeter" type="PropertyMeterType"/>
+            </xs:sequence>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

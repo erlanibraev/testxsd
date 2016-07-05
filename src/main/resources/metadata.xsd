@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<xs:schema targetNamespace="http://www.factor.kz/resources/TOFISchema/metadata" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tst="http://www.factor.kz/resources/TOFISchema/simpletype"
+           xmlns:tct="http://www.factor.kz/resources/TOFISchema/complextype"
+           xmlns="http://www.factor.kz/resources/TOFISchema/metadata">
+
+    <xs:import namespace="http://www.factor.kz/resources/TOFISchema/simpletype" schemaLocation="simpletype.xsd"/>
+    <xs:import namespace="http://www.factor.kz/resources/TOFISchema/complextype" schemaLocation="complextype.xsd"/>
+
+    <xs:complexType name="MetaDataType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий метаданные.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="MetadataVersion" type="MetaDataVersionType">
+                <xs:annotation>
+                    <xs:documentation>Версия метаданных и данных</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CodingSystems" type="CodingSystemsType">
+                <xs:annotation>
+                    <xs:documentation>Система кодирования</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Factors" type="FactorsType">
+                <xs:annotation>
+                    <xs:documentation>Факторы</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Meters" type="MetersType">
+                <xs:annotation>
+                    <xs:documentation>Измерители.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="OwnerContainers" type="OwnerContainersType">
+                <xs:annotation>
+                    <xs:documentation>Контейнеры владельцев данных.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Owners" type="OwnersType">
+                <xs:annotation>
+                    <xs:documentation>Владельцы данных.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PropertiesContainer" type="PropertiesContainerType">
+                <xs:annotation>
+                    <xs:documentation>Контейнеры свойств.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Properties" type="PropertiesType">
+                <xs:annotation>
+                    <xs:documentation>Свойства</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="OwnerContainerProperties" type="OwnerContainerPropertiesType">
+                <xs:annotation>
+                    <xs:documentation>Характеристические свойства владельца</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="LatestVersion" type="tst:LatestVersionType" use="required">
+            <xs:annotation>
+                <xs:documentation>Признак последней версии</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+
+    <xs:complexType name="CodingSystemsType">
+        <xs:annotation>
+            <xs:documentation>Сиcтемы кодирования.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="CodingSystem" type="tct:CodingSystemType" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MetersType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий измерителей.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Meter" type="tct:MeterType" maxOccurs="unbounded"/>
+            <xs:element name="MeterRate" type="tct:MeterRateType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="OwnerContainersType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий всех контейнеров владельцев данных</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="OwnerContainer" type="tct:OwnerContainerType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="OwnerContainerFactor" type="tct:OwnerContainerType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="OwnerContainerRel" type="tct:OwnerContainerType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="OwnersType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий владельцев данных</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Owner" type="tct:OwnerType" minOccurs="1" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="OwnerRel" type="tct:OwnerType" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PropertiesContainerType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий контейнеры свойств.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="PropertyContainer" type="tct:PropertyContainerType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PropertiesType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий свойства</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Property" type="tct:PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="PropertyMeter" type="tct:PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="PropertyRef" type="tct:PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="OwnerContainerPropertiesType">
+        <xs:annotation>
+            <xs:documentation>Характеристические свойства владельцев данных.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="OwnerContainerProperty" type="tct:OwnerContainerPropertyType" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element name="OwnerContainerFactorProperty" type="tct:OwnerContainerFactorPropertyType" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element name="OwnerContainerRelProperty" type="tct:OwnerContainerRelPropertyType" minOccurs="0"
+                        maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FactorsType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий факторов</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Factor" type="tct:FactorType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MetaDataVersionType">
+        <xs:complexContent>
+            <xs:extension base="tct:VersionType"/>
+        </xs:complexContent>
+    </xs:complexType>
+
+</xs:schema>
