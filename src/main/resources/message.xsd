@@ -1,36 +1,59 @@
 <?xml version="1.0"?>
 <xs:schema targetNamespace="http://www.factor.kz/resources/TOFISchema" elementFormDefault="qualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://www.factor.kz/resources/TOFISchema"
            xmlns:md="http://www.factor.kz/resources/TOFISchema/metadata"
            xmlns:data="http://www.factor.kz/resources/TOFISchema/data"
-           xmlns="http://www.factor.kz/resources/TOFISchema">
+>
 
     <xs:import namespace="http://www.factor.kz/resources/TOFISchema/data" schemaLocation="data.xsd"/>
     <xs:import namespace="http://www.factor.kz/resources/TOFISchema/metadata" schemaLocation="metadata.xsd"/>
 
-    <xs:element name="getMessageRequest">
+    <xs:element name="getDataRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="Request" type="RequestType" maxOccurs="1"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:element name="getMessageResponse">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="body" type="BodyType" maxOccurs="1"/>
+                <xs:element name="data" type="SendDataType" maxOccurs="1"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:complexType name="BodyType">
+    <xs:element name="getDataResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="data" type="SendDataType" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:complexType name="SendDataType">
         <xs:sequence>
-            <xs:element name="metadata" type="md:MetaDataType" maxOccurs="1"/>
-            <xs:element name="data" type="data:DataType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="head" type="HeadType" maxOccurs="1"/>
+            <xs:element name="body" type="BodyType" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="RequestType">
+    <xs:complexType name="HeadType">
+        <xs:sequence>
+            <xs:element name="sender" type="SenderType"/>
+            <xs:element name="receiver" type="ReceiverType"/>
+            <xs:element name="requestType" type="RequestType"/>
+        </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="BodyType">
+        <xs:sequence>
+            <xs:element name="query" type="QueryType" maxOccurs="1"/>
+            <xs:element name="metadata" type="md:MetaDataType" maxOccurs="1"/>
+            <xs:element name="data" type="data:DataType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="error" type="ErrorType" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="SenderType"></xs:complexType>
+    <xs:complexType name="ReceiverType"></xs:complexType>
+    <xs:complexType name="ErrorType"></xs:complexType>
+    <xs:complexType name="RequestType"></xs:complexType>
+    <xs:complexType name="QueryType"></xs:complexType>
 </xs:schema>

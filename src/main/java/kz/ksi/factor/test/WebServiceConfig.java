@@ -1,5 +1,6 @@
 package kz.ksi.factor.test;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +18,7 @@ import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection;
 /**
  * Created by Erlan.Ibraev on 05.07.2016.
  */
-@EnableWs
+
 @Configuration
 public class WebServiceConfig {
 

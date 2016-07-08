@@ -1,8 +1,6 @@
 package kz.ksi.factor.test.repository.service.impl;
 
-import kz.factor.resources.tofischema.BodyType;
-import kz.factor.resources.tofischema.GetMessageRequest;
-import kz.factor.resources.tofischema.GetMessageResponse;
+import kz.factor.resources.tofischema.*;
 import kz.factor.resources.tofischema.data.DataType;
 import kz.factor.resources.tofischema.metadata.MetaDataType;
 import kz.ksi.factor.test.repository.service.ITestService;
@@ -17,11 +15,11 @@ import java.util.List;
 @Component
 public class TestService implements ITestService {
 
-    public GetMessageResponse getMessageResponse(GetMessageRequest request) {
-        GetMessageResponse result = new GetMessageResponse();
-
-        result.setBody(makeBody());
-
+    public GetDataResponse getMessageResponse(GetDataRequest request) {
+        SendDataType data = new SendDataType();
+        data.setBody(makeBody());
+        GetDataResponse result = new GetDataResponse();
+        result.setData(data);
         return result;
     }
 

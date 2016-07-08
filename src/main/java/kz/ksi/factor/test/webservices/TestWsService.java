@@ -1,7 +1,7 @@
 package kz.ksi.factor.test.webservices;
 
-import kz.factor.resources.tofischema.GetMessageRequest;
-import kz.factor.resources.tofischema.GetMessageResponse;
+import kz.factor.resources.tofischema.GetDataRequest;
+import kz.factor.resources.tofischema.GetDataResponse;
 import kz.ksi.factor.test.repository.service.ITestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -15,7 +15,7 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 @Endpoint
 public class TestWsService {
 
-    private static final String NAMESPACE_URI = "http://www.factor.kz/resources/TOFISchema";
+    public static final String NAMESPACE_URI = "http://www.factor.kz/resources/TOFISchema";
 
     private ITestService testService;
 
@@ -28,9 +28,10 @@ public class TestWsService {
         this.testService = testService;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getMessageRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getDataRequest")
     @ResponsePayload
-    public GetMessageResponse getMessage(@RequestPayload GetMessageRequest request) {
+    public GetDataResponse getData(@RequestPayload GetDataRequest request) {
         return testService.getMessageResponse(request);
     }
+
 }
